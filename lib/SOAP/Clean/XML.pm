@@ -22,6 +22,7 @@ BEGIN {
 		    &xml_is_document
 		    &xml_document_version
 		    &xml_document_encoding
+		    &xml_document_element
 		    &attr
 		    &xml_is_attr
 		    &xml_attr_name
@@ -270,14 +271,14 @@ sub xml_dump {
 
 sub xml_to_file {
   my ($e,$filename) = @_;
-  assert(open F, ">$filename");
+  assert((open F, ">$filename"),"Cannot open $filename for writing");
   xml_to_fh($e,\*F);
   assert(close F);
 }
 
 sub xml_from_file {
   my ($filename) = @_;
-  assert(open F, "<$filename");
+  assert((open F, "<$filename"),"Cannot open $filename for reading");
   my $node = xml_from_fh(\*F);
   assert(close F);
   return $node;
@@ -479,8 +480,11 @@ sub xml_extract_and_close_child {
 
 ########################################################################
 
-#do "SOAP/Clean/XMLTwig.pm" || assert(0);
-do "SOAP/Clean/XMLLibxml.pm" || assert(0);
+#do "SOAP/Clean/XMLTwig.pm" ||
+#  die "Can't load SOAP::Clean::XMLTwig. Is XML::Twig installed?";
+
+do "SOAP/Clean/XMLLibxml.pm" || 
+  die "Can't load SOAP::Clean::XMLLibxml. Is XML::LibXML installed?";
 
 ########################################################################
 

@@ -59,7 +59,7 @@ if ( $usage ) {
     }
   }
 
-  exit(0);
+  goto EXIT;
 }
 
 my $method_name = shift @ARGV;
@@ -135,6 +135,7 @@ my $results = $c->invoke($method_name,$args);
 
 my $exit_status;
 
+# fixme: bools are printed as 0 and 1. Is that right?
 foreach my $out_arg_name ( keys %$out_args ) {
   my $out_arg_type = $$out_args{$out_arg_name};
   my $optional = 0;
@@ -180,8 +181,19 @@ foreach my $out_arg_name ( keys %$out_args ) {
   }
 }
 
-defined($exit_status) || ( $exit_status = 0 );
+########################################################################
 
+EXIT:
+
+if ( $verbose ) {
+  print "##################################################\n";
+  print "HTTP Statistics:\n";
+  my ($request_count,$response_count) = $c->counts();
+  print "Request count = ",$request_count,"\n";
+  print "Response count = ",$response_count,"\n";
+}
+
+defined($exit_status) || ( $exit_status = 0 );
 exit($exit_status);
 
 ########################################################################

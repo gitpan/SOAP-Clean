@@ -7,7 +7,10 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'		=> 'SOAP::Clean',
     'VERSION_FROM'	=> 'lib/SOAP/Clean.pm', # finds $VERSION
-    'PREREQ_PM'		=> {}, # e.g., Module::Name => 1.1
+    'PREREQ_PM'		=> { # e.g., Module::Name => 1.1
+			    LWP => 5.65,
+			    XML::LibXML => 1.53,
+			   },
     ($] >= 5.005 ?    ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM => 'lib/SOAP/Clean.pm', # retrieve abstract from module
        AUTHOR     => 'Paul Stodghil <stodghil@cs.cornell.edu>') : ()),

@@ -251,6 +251,13 @@ sub initialize {
   my ($self) = @_;
   $self->{is_server} = 0;
   $self->{verbose} = 0;
+  $self->{request_count} = 0;
+  $self->{response_count} = 0;
+}
+
+sub counts {
+  my ($self) = @_;
+  return ($self->{request_count},$self->{response_count});
 }
 
 sub verbose {
@@ -305,22 +312,31 @@ sub _comm {
     $request->content($request_str);
   }
 
-  # Send it.
-  $self->_print(1,"##################################################\n");
-  if ($tag) {
-    $self->_print(0,"Invoking ",$tag," at ",$server_url,"...\n");
-  } else {
-    $self->_print(0,"Invoking ",$server_url,"...\n");
+  # Messages and statistics before sending
+  if ( $self->{verbose} ) {
+    $self->_print(1,"##################################################\n");
+    if ($tag) {
+      $self->_print(0,"Invoking ",$tag," at ",$server_url,"...\n");
+    } else {
+      $self->_print(0,"Invoking ",$server_url,"...\n");
+    }
+    my $request_str = $request->as_string();
+    $self->_print(1,$request_str);
+    $self->{request_count} += length($request_str);
   }
-  $self->_print(1,$request->as_string());
 
-  # Receive the response
+  # Send the request - receive the response.
   my $response = $ua->request($request);
-  $self->_print(1,"##################################################\n");
-  $self->_print(1,,"Response:\n");
-  $self->_print(1,$response->as_string());
 
-  $self->_print(1,"##################################################\n");
+  # Messages and statistics after receiving
+  if ( $self->{verbose} ) {
+    $self->_print(1,"##################################################\n");
+    $self->_print(1,,"Response:\n");
+    my $response_str = $response->as_string();
+    $self->_print(1,$response_str);
+    $self->_print(1,"##################################################\n");
+    $self->{response_count} += length($response_str);
+  }
 
   return $response;
 }

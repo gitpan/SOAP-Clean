@@ -1,7 +1,7 @@
 Copyright (c) 2003, Cornell University
 See the file COPYING for the status of this software
 
-SOAP::Clean version 0.01
+SOAP::Clean version 0.02
 ========================
 
 		    *** THIS IS AN ALPHA RELEASE ***
@@ -62,6 +62,12 @@ To install this module type the following (probably as root):
    make
    make test
    make install
+
+If you are not root, you might try changing the first command to something
+like,
+
+   perl Makefile.PL PREFIX=~/usr/share LIB=~/usr/share/lib/perl5
+
 
 Configuring your web server
 ===========================
